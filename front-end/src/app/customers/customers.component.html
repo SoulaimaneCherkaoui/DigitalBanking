@@ -1,0 +1,71 @@
+<div class="container">
+  <mat-card *ngIf="customers;else failureOrLoading" >
+    <mat-card-header style="display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; ">
+      <mat-card-title>Customers</mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div class="mat-elevation-z8">
+        <div *ngIf="searshformGroup">
+          <form [formGroup]="searshformGroup" (ngSubmit)="handleSearshCustomers()">
+            <div class="input-group">
+              <label class="input-group-text">Keyword :</label>
+              <input type="text" formControlName="keyword" class="form-control">
+              <button class="btn btn-info">
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+        <table matSort mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>
+          <ng-container matColumnDef="supprimer">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element">
+            <button mat-button (click)="supprimer(element)">
+              <mat-icon><span class="material-symbols-outlined">
+delete
+</span></mat-icon>
+            </button></td>
+          </ng-container>
+
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[3,5, 10, 20,50]"
+                       showFirstLastButtons
+                       aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <ng-template #failureOrLoading>
+
+
+  <ng-container *ngIf="errorMessage;else loading">
+    <div *ngIf="errorMessage" class="text-danger">
+      <h2>{{errorMessage}}</h2>
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+  </ng-template>
+</div>
