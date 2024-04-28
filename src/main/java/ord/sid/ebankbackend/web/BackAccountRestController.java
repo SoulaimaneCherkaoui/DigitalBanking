@@ -2,15 +2,11 @@ package ord.sid.ebankbackend.web;
 
 
 import lombok.AllArgsConstructor;
-import ord.sid.ebankbackend.dtos.AccountHistoryDTO;
-import ord.sid.ebankbackend.dtos.AccountOperationDTO;
-import ord.sid.ebankbackend.dtos.BankAccountDTO;
+import ord.sid.ebankbackend.dtos.*;
+import ord.sid.ebankbackend.exceptions.BalanceNoSufficientExeption;
 import ord.sid.ebankbackend.exceptions.BankAccountNotFoundExeption;
 import ord.sid.ebankbackend.services.BankAccountService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +37,20 @@ return bankAccountService.accountHistory(accountId);
 
         return bankAccountService.getAccountHistory(accountId,page,size);
     }
-
-
+@PostMapping("accounts/debit/")
+public debitDTO debit(@RequestBody debitDTO debitDTO) throws BankAccountNotFoundExeption, BalanceNoSufficientExeption {
+    this.bankAccountService.debit(debitDTO.getAccountId(),debitDTO.getAmount(),debitDTO.getDescription());
+    return debitDTO;}
+    @PostMapping("/accounts/credit")
+    public creditDTO credit(@RequestBody creditDTO creditDTO) throws BankAccountNotFoundExeption {
+        this.bankAccountService.credit(creditDTO.getAccountId(),creditDTO.getAmount(),creditDTO.getDescription());
+        return creditDTO;
+    }
+    @PostMapping("/accounts/transfer")
+    public void transfer(@RequestBody transferDTO transferRequestDTO) throws BankAccountNotFoundExeption, BalanceNoSufficientExeption {
+        this.bankAccountService.transfer(
+                transferRequestDTO.getAccountSource(),
+                transferRequestDTO.getAccountDestination(),
+                transferRequestDTO.getAmount());
+    }
 }

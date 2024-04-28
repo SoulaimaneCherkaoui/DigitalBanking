@@ -32,4 +32,6 @@ AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws
     void deleteCustomer(Long customerId);
 
     List<AccountOperationDTO> accountHistory(String acountId);
+
+    List<CustomerDTO> searchCustomers(String s);
 }

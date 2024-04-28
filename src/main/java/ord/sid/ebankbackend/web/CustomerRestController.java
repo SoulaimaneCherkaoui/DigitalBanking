@@ -26,6 +26,10 @@ public CustomerDTO getCustomer(@PathVariable(name = "id") Long customerId) throw
 return bankAccountService.getCustomer(customerId);
 
 }
+    @GetMapping("/customers/search")
+    public List<CustomerDTO> searchCustomers(@RequestParam(name = "keyword",defaultValue = "") String keyword){
+        return bankAccountService.searchCustomers("%"+keyword+"%");
+    }
 @PostMapping("/customers")
 public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
 return bankAccountService.saveCustomer(customerDTO);

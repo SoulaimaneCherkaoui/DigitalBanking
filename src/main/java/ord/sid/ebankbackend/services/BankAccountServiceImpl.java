@@ -193,4 +193,11 @@ accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());
 
     }
 
+    @Override
+    public List<CustomerDTO> searchCustomers(String s) {
+        List<Customer> customers=customerRepo.searchCustomer(s);
+        List<CustomerDTO> customerDTOS = customers.stream().map(cust -> dtoMapper.fromCustomer(cust)).collect(Collectors.toList());
+        return customerDTOS;
+    }
+
 }
