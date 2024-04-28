@@ -20,10 +20,11 @@ public abstract class BankAccount {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     @ManyToOne
+
     private Customer customer;
     //lazy : pas charger automatiquement(lazy ca va marcher s'il est transactional dans la couche service)
     //eager : charge automatiquement tout les operations auto (pas pratique)
-    @OneToMany(mappedBy = "bankAccount",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bankAccount",fetch = FetchType.LAZY)
     private List<AccountOperation> accountOperations;
 
 }

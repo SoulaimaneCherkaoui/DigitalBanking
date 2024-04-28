@@ -1,20 +1,23 @@
 package ord.sid.ebankbackend;
 
-import ord.sid.ebankbackend.entities.AccountOperation;
-import ord.sid.ebankbackend.entities.CurrentAccount;
-import ord.sid.ebankbackend.entities.Customer;
-import ord.sid.ebankbackend.entities.SavingAccount;
+import ord.sid.ebankbackend.dtos.BankAccountDTO;
+import ord.sid.ebankbackend.dtos.CustomerDTO;
+import ord.sid.ebankbackend.entities.*;
 import ord.sid.ebankbackend.enums.AccountStatus;
 import ord.sid.ebankbackend.enums.OperationType;
+import ord.sid.ebankbackend.exceptions.BalanceNoSufficientExeption;
+import ord.sid.ebankbackend.exceptions.CustomerNotFoundException;
 import ord.sid.ebankbackend.repositories.AccountOperationRepo;
 import ord.sid.ebankbackend.repositories.BankAccountRepo;
 import ord.sid.ebankbackend.repositories.CutomerRepo;
+import ord.sid.ebankbackend.services.BankAccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -24,7 +27,39 @@ public class EbankBackendApplication {
     public static void main(String[] args) {
         SpringApplication.run(EbankBackendApplication.class, args);
     }
-@Bean
+    //@Bean
+    CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
+        return args -> {
+            Stream.of("Hassan","Imane","Mohamed").forEach(name->{
+                CustomerDTO customer=new CustomerDTO();
+                customer.setName(name);
+                customer.setEmail(name+"@gmail.com");
+                bankAccountService.saveCustomer(customer);
+            });
+            bankAccountService.listCustomers().forEach(customer->{
+                try {
+                    bankAccountService.saveCurrentBankAccount(Math.random()*90000,9000,customer.getId());
+                    bankAccountService.saveSavingBankAccount(Math.random()*120000,5.5,customer.getId());
+
+                } catch (CustomerNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+           /* List<BankAccount> bankAccounts = bankAccountService.bankAccountList();
+            for (BankAccount bankAccount:bankAccounts){
+                for (int i = 0; i <10 ; i++) {
+
+                    bankAccountService.credit(bankAccount.getId(),10000+Math.random()*120000,"Credit");
+                    try {
+                        bankAccountService.debit(bankAccount.getId(), 1000+Math.random()*9000,"Debit");
+                    } catch (BalanceNoSufficientExeption e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }*/
+        };
+    }
+//@Bean
     CommandLineRunner start(CutomerRepo cutomerRepo, AccountOperationRepo accountOperationRepo, BankAccountRepo bankAccountRepo){
         return args -> {
             Stream.of("Soulaimane","Zaid","Nouhayla").forEach(name->{
