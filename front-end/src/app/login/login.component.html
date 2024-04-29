@@ -1,0 +1,27 @@
+
+
+<div class="container">
+
+<mat-card class="my-card">
+  <mat-card-header style="display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; ">
+    <mat-card-title><h1>Login</h1></mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <form class="my-form" [formGroup]="formLogin" (ngSubmit)="handleLogin()">
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input  matInput  placeholder="Email" name="email" formControlName="username">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Password</mat-label>
+        <input  matInput  placeholder="Password" name="password" formControlName="password">
+      </mat-form-field>
+      <button mat-raised-button style="float: right;width: 150px;" color="primary">LOGIN</button>
+    </form>
+  </mat-card-content>
+
+</mat-card>
+</div>

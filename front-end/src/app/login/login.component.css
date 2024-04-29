@@ -1,0 +1,12 @@
+.container{
+  width: 600px;
+  display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; /* Centrer verticalement */
+
+
+}
+.full-width {
+  width: 100%;
+  padding-top: 20px;
+}
