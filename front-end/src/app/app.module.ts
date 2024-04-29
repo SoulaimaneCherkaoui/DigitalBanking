@@ -9,7 +9,7 @@ import {MatToolbar, MatToolbarModule} from "@angular/material/toolbar";
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import { CustomersComponent } from './customers/customers.component';
 import { AccountsComponent } from './accounts/accounts.component';
-import {HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {MatCard, MatCardContent, MatCardHeader, MatCardModule} from "@angular/material/card";
 import {MatDivider, MatDividerModule} from "@angular/material/divider";
 import {MatSort, MatSortHeader, MatSortModule} from "@angular/material/sort";
@@ -29,6 +29,9 @@ import {MatFormField, MatFormFieldModule, MatLabel} from "@angular/material/form
 import {MatIcon, MatIconModule} from "@angular/material/icon";
 import {MatInput, MatInputModule} from "@angular/material/input";
 import { NewCustomerComponent } from './new-customer/new-customer.component';
+import { LoginComponent } from './login/login.component';
+import { AdminTemplateComponent } from './admin-template/admin-template.component';
+import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { NewCustomerComponent } from './new-customer/new-customer.component';
     NavbarComponent,
     CustomersComponent,
     AccountsComponent,
-    NewCustomerComponent
+    NewCustomerComponent,
+    LoginComponent,
+    AdminTemplateComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +74,7 @@ import { NewCustomerComponent } from './new-customer/new-customer.component';
     MatIconModule
   ],
   providers: [
+    {provide : HTTP_INTERCEPTORS,useClass:AppHttpInterceptor,multi:true},
     provideClientHydration(),
     provideAnimationsAsync(),
     provideHttpClient(withFetch())

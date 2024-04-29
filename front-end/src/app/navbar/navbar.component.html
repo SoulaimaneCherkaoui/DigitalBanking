@@ -1,7 +1,12 @@
-<mat-toolbar color="primary">
+<mat-toolbar *ngIf="authService.isAuthenticated" color="primary">
+  <button mat-button color="secondary" disabled>{{this.authService.username}}</button>
+  <button mat-button routerLink="/admin/home">Home</button>
+  <button mat-button routerLink="/admin/customers">Customers</button>
+  <button mat-button routerLink="/admin/accounts">Accounts</button>
+  <button mat-button routerLink="/admin/new-customer">AddCustomer</button>
 
-  <button mat-button routerLink="/home">Home</button>
-  <button mat-button routerLink="/customers">Customers</button>
-  <button mat-button routerLink="/accounts">Accounts</button>
-  <button mat-button routerLink="/new-customer">AddCustomer</button>
+
+      <button mat-button  (click)="handleLogout()">Logout</button>
+
 </mat-toolbar>
+
