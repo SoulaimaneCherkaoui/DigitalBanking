@@ -8,10 +8,9 @@ import {Router} from "@angular/router";
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-constructor(public authService : AuthService,private router:Router) {
+constructor(public authService : AuthService) {
 }
   handleLogout() {
     this.authService.logout();
-    this.router.navigateByUrl("/login");
   }
 }

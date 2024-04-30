@@ -3,7 +3,7 @@
   <button mat-button routerLink="/admin/home">Home</button>
   <button mat-button routerLink="/admin/customers">Customers</button>
   <button mat-button routerLink="/admin/accounts">Accounts</button>
-  <button mat-button routerLink="/admin/new-customer">AddCustomer</button>
+  <button mat-button *ngIf="authService.roles.includes('ADMIN')" routerLink="/admin/new-customer">AddCustomer</button>
 
 
       <button mat-button  (click)="handleLogout()">Logout</button>
