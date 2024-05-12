@@ -27,7 +27,7 @@ this.customerService.saveCustomer(customer).subscribe({
   next : data => {
     alert("Customer has been successfully added!")
     //this.newCustomerFormGroup.reset();
-    this.router.navigateByUrl("/customers");
+    this.router.navigateByUrl("/admin/customers");
   },
   error:err => {
     console.log(err);

@@ -8,6 +8,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import {MatToolbar, MatToolbarModule} from "@angular/material/toolbar";
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import { CustomersComponent } from './customers/customers.component';
+
 import { AccountsComponent } from './accounts/accounts.component';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {MatCard, MatCardContent, MatCardHeader, MatCardModule} from "@angular/material/card";
@@ -33,6 +34,18 @@ import { LoginComponent } from './login/login.component';
 import { AdminTemplateComponent } from './admin-template/admin-template.component';
 import {AppHttpInterceptor} from "./interceptors/app-http.interceptor";
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import {MatMenu, MatMenuItem, MatMenuModule, MatMenuTrigger} from "@angular/material/menu";
+import {MatDrawer, MatDrawerContainer, MatDrawerContent} from "@angular/material/sidenav";
+import {MatList, MatListItem, MatListModule} from "@angular/material/list";
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { MyAccountsComponent } from './my-accounts/my-accounts.component';
+import { MyHistoryComponent } from './my-history/my-history.component';
+import { OperationComponent } from './operation/operation.component';
+import { EditerCustomerComponent } from './editer-customer/editer-customer.component';
+import {BaseChartDirective, NgChartsModule} from "ng2-charts";
+import { TransactionsComponent } from './transactions/transactions.component';
+import { TransferComponent } from './transfer/transfer.component';
+
 
 @NgModule({
   declarations: [
@@ -43,7 +56,14 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
     NewCustomerComponent,
     LoginComponent,
     AdminTemplateComponent,
-    NotAuthorizedComponent
+    NotAuthorizedComponent,
+    MyAccountsComponent,
+    MyHistoryComponent,
+    OperationComponent,
+    EditerCustomerComponent,
+    DashboardComponent,
+    TransactionsComponent,
+    TransferComponent
   ],
   imports: [
     BrowserModule,
@@ -68,12 +88,22 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
     MatRow,
     MatProgressSpinner,
     ReactiveFormsModule,
+    BrowserModule,
     MatIcon,
     MatInputModule,
     MatLabel,
     FormsModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatMenuTrigger,
+    MatDrawerContainer,
+    MatDrawerContent,
+    MatListModule,
+    MatListItem,
+    MatMenuItem,
+    MatDrawer,
+    NgChartsModule
   ],
   providers: [
     {provide : HTTP_INTERCEPTORS,useClass:AppHttpInterceptor,multi:true},

@@ -1,0 +1,75 @@
+<div class="container">
+  <mat-card  >
+    <mat-card-header style="display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; ">
+      <mat-card-title>Transactions</mat-card-title>
+
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div class="mat-elevation-z8">
+
+        <button mat-raised-button color="accent" style="display: flex;
+  justify-content: right; /* Centrer horizontalement */
+  align-items: center; " (click)="Prediction()"> Fraud detection
+        </button>
+
+        <table matSort mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="accountSource">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> accountSource </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.accountSource}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="oldSoldeSource">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> oldSoldeSource </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.oldSoldeSource}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="newSoldeSource">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> newSoldeSource </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.newSoldeSource}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>  amount </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.amount}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="accountDestination">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> accountDestination </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.accountDestination}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="oldSoldeDestination">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> oldSoldeDestination </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.oldSoldeDestination}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="newSoldeDestination">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> newSoldeDestination </th>
+            <td mat-cell *matCellDef="let element" [ngClass]="{'red-text': element.color === 'R', 'green-text': element.color === 'V'}">{{element.newSoldeDestination}}</td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+
+        <mat-paginator [pageSizeOptions]="[10, 20,50]"
+                       showFirstLastButtons
+                       aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
+
+
+
+    </mat-card-content>
+
+  </mat-card>
+
+
+</div>
+

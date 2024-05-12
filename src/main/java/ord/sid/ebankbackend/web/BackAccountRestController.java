@@ -3,6 +3,7 @@ package ord.sid.ebankbackend.web;
 
 import lombok.AllArgsConstructor;
 import ord.sid.ebankbackend.dtos.*;
+import ord.sid.ebankbackend.entities.Transfer;
 import ord.sid.ebankbackend.exceptions.BalanceNoSufficientExeption;
 import ord.sid.ebankbackend.exceptions.BankAccountNotFoundExeption;
 import ord.sid.ebankbackend.services.BankAccountService;
@@ -25,12 +26,23 @@ public List<BankAccountDTO> listAccounts(){
         return bankAccountService.bankAccountList();
 }
 
-
+@GetMapping("/transfer")
+public List<Transfer> listTransfer(){
+        return bankAccountService.getAllTransfer();
+}
+    @GetMapping("/transfer/{accountId}")
+    public List<Transfer> listTransferById(@PathVariable String accountId){
+        return bankAccountService.getAllTransferByID(accountId);
+    }
 
 @GetMapping("/accounts/{accountId}/operations")
 public List<AccountOperationDTO> getHistory(@PathVariable String accountId) {
 return bankAccountService.accountHistory(accountId);
 }
+    @GetMapping("/accounts/operations")
+    public List<AccountOperationDTO> getOperations() {
+        return bankAccountService.AllaccountHistory();
+    }
     @GetMapping("/accounts/{accountId}/pageOperations")
     public AccountHistoryDTO getAccountHistory(@PathVariable String accountId,
                                                @RequestParam(name = "page",defaultValue = "0") int page,

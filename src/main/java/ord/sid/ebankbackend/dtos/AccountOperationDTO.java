@@ -18,4 +18,6 @@ public class AccountOperationDTO {
     private OperationType type;
 
 
+
+
 }

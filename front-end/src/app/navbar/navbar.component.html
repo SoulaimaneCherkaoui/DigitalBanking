@@ -1,12 +1,48 @@
 <mat-toolbar *ngIf="authService.isAuthenticated" color="primary">
-  <button mat-button color="secondary" disabled>{{this.authService.username}}</button>
-  <button mat-button routerLink="/admin/home">Home</button>
-  <button mat-button routerLink="/admin/customers">Customers</button>
-  <button mat-button routerLink="/admin/accounts">Accounts</button>
-  <button mat-button *ngIf="authService.roles.includes('ADMIN')" routerLink="/admin/new-customer">AddCustomer</button>
+
+    <button mat-icon-button (click)="myDrawer.toggle()" *ngIf="authService.roles.includes('ADMIN')">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <button mat-button routerLink="/admin/home">Home</button>
+    <button mat-button routerLink="/admin/customers">Customers</button>
+  <button mat-button routerLink="/admin/students">My History</button>
 
 
-      <button mat-button  (click)="handleLogout()">Logout</button>
+  <button mat-button routerLink="/admin/students">Transfer</button>
+  <button mat-button routerLink="/admin/payments">My Accounts</button>
 
+  <span style="flex: auto"></span>
+
+    <button mat-button *ngIf="authService.isAuthenticated">
+      {{authService.username}}
+    </button>
+    <button mat-raised-button color="accent" (click)="handleLogout()">Logout</button>
 </mat-toolbar>
 
+<mat-drawer-container>
+  <mat-drawer  #myDrawer opened="true" mode="side" position="start" >
+    <mat-list *ngIf="authService.roles.includes('ADMIN')">
+      <mat-list-item>
+        <button mat-button routerLink="/admin/dashboard" *ngIf="authService.roles.includes('ADMIN')"><mat-icon>dashboard</mat-icon>Dashboard</button>
+      </mat-list-item>
+      <mat-list-item>
+      <button mat-button routerLink="/admin/history" *ngIf="authService.roles.includes('ADMIN')"><mat-icon>dashboard</mat-icon>History</button>
+      </mat-list-item>
+      <mat-list-item>
+      <button *ngIf="authService.roles.includes('ADMIN')" mat-button routerLink="/admin/new-customer"><mat-icon>dashboard</mat-icon>
+        AddCustomer</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-button routerLink="/admin/transactions" *ngIf="authService.roles.includes('ADMIN')"><mat-icon>dashboard</mat-icon>All Transactions</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-button routerLink="/admin/accounts" *ngIf="authService.roles.includes('ADMIN')"><mat-icon>dashboard</mat-icon>All Accounts</button>
+      </mat-list-item>
+
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div style="min-height: 600px"><router-outlet></router-outlet></div>
+  </mat-drawer-content>
+</mat-drawer-container>

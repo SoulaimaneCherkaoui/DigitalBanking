@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Customer} from "../model/customer.model";
@@ -13,6 +13,9 @@ backendHost:string="http://localhost:8085"
 public getCustomer():Observable<Array<Customer>>{
     return this.http.get<Array<Customer>>(this.backendHost+"/customers");
 }
+  public getCustomerById(id:number):Observable<Customer>{
+    return this.http.get<Customer>(this.backendHost + "/customers/" + id);
+  }
   public searchCustomer(keyword:string):Observable<Array<Customer>>{
     return this.http.get<Array<Customer>>(this.backendHost+"/customers/search?keyword="+keyword);
   }
@@ -21,5 +24,8 @@ public getCustomer():Observable<Array<Customer>>{
   }
   public deleteCustomer(id:number){
    return this.http.delete(this.backendHost+"/customers/"+id);
+  }
+  public editCustomer(id:number,customer:Customer){
+    return this.http.put<Customer>(this.backendHost+"/customers/"+id,customer);
   }
 }

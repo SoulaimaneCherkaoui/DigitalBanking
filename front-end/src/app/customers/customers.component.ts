@@ -7,6 +7,7 @@ import {CustomerService} from "../services/customer.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Customer} from "../model/customer.model";
 import {map} from "rxjs";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-customers',
@@ -18,11 +19,11 @@ export class CustomersComponent implements OnInit{
   public dataSource : any;
   errorMessage!:string;
   searshformGroup!  : FormGroup;
-  public displayedColumns: Iterable<string> = ['id','name','email','supprimer']
+  public displayedColumns: Iterable<string> = ['id','name','email','supprimer','editer']
   @ViewChild(MatPaginator) paginator! : MatPaginator;
   @ViewChild(MatSort) sort! : MatSort;
 
-  constructor(private customerService:CustomerService,private fb : FormBuilder) {
+  constructor(private customerService:CustomerService,private fb : FormBuilder,private router :Router) {
   }
 
   ngOnInit(): void {
@@ -67,6 +68,13 @@ this.customerService.deleteCustomer(element.id).subscribe({
     console.log(err);
   }
 })
+
+  }
+
+  editer(element:Customer) {
+
+      this.router.navigateByUrl(`/admin/editCustomer/${element.id}`);
+
 
   }
 }

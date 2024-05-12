@@ -9,18 +9,16 @@ import ord.sid.ebankbackend.exceptions.BalanceNoSufficientExeption;
 import ord.sid.ebankbackend.exceptions.BankAccountNotFoundExeption;
 import ord.sid.ebankbackend.exceptions.CustomerNotFoundException;
 import ord.sid.ebankbackend.mappers.BankAccountMapperImpl;
+import ord.sid.ebankbackend.repositories.TransferRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ord.sid.ebankbackend.repositories.AccountOperationRepo;
 import ord.sid.ebankbackend.repositories.BankAccountRepo;
 import ord.sid.ebankbackend.repositories.CutomerRepo;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +26,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 public class BankAccountServiceImpl implements BankAccountService{
-
+private static int i=1;
     private CutomerRepo customerRepo;
     private BankAccountRepo bankAccountRepo;
     private  AccountOperationRepo accountOperationRepo;
 private BankAccountMapperImpl dtoMapper;
+private TransferRepo transferRepo;
 
 
     @Override
@@ -64,12 +63,16 @@ private BankAccountMapperImpl dtoMapper;
     @Override
     public SavingBankAccountDTO saveSavingBankAccount(double initialBalanace, double interset, Long customerID) throws CustomerNotFoundException {
         Customer customer = customerRepo.findById(customerID).orElse(null);
+        Calendar calendar = Calendar.getInstance();
+        if(i>15){i=1;}
+        calendar.add(Calendar.DAY_OF_MONTH, i++);
+        Date nextDay = calendar.getTime();
         if(customer==null)
             throw new CustomerNotFoundException("Customer Not Found !");
         SavingAccount bankAccount = new SavingAccount();
 
         bankAccount.setId(UUID.randomUUID().toString());
-        bankAccount.setCreateAt(new Date());
+        bankAccount.setCreateAt(nextDay);
         bankAccount.setBalance(initialBalanace);
         bankAccount.setInterest(interset);
         bankAccount.setCustomer(customer);
@@ -100,14 +103,20 @@ return dtoMapper.fromCurrentBankAccount(currentAccount);}
 
     @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundExeption, BalanceNoSufficientExeption {
+        Calendar calendar = Calendar.getInstance();
+        if(i>15){i=1;}
+        calendar.add(Calendar.DAY_OF_MONTH, i++);
+        Date nextDay = calendar.getTime();
         BankAccount bankAccount=bankAccountRepo.findById(accountId)
-                .orElseThrow(()->new BankAccountNotFoundExeption("BankAccount not found"));if(bankAccount.getBalance()<amount)
-    throw new BalanceNoSufficientExeption("balance no sufficient");
+                .orElseThrow(()->new BankAccountNotFoundExeption("BankAccount not found"));if(bankAccount.getBalance()<amount) {
+            throw new BalanceNoSufficientExeption("balance no sufficient");
+        }
+
         AccountOperation accountOperation = new AccountOperation();
         accountOperation.setType(OperationType.DEBIT);
         accountOperation.setAmount(amount);
         accountOperation.setDescription(description);
-        accountOperation.setOpeationDate(new Date());
+        accountOperation.setOpeationDate(nextDay);
         accountOperation.setBankAccount(bankAccount);
         accountOperationRepo.save(accountOperation);
         bankAccount.setBalance(bankAccount.getBalance()-amount);
@@ -117,12 +126,16 @@ return dtoMapper.fromCurrentBankAccount(currentAccount);}
 
     @Override
     public void credit(String accountId, double amount, String description) throws BankAccountNotFoundExeption {
+        Calendar calendar = Calendar.getInstance();
+        if(i>15){i=1;}
+        calendar.add(Calendar.DAY_OF_MONTH, i++);
+        Date nextDay = calendar.getTime();
         BankAccount bankAccount=bankAccountRepo.findById(accountId)
                 .orElseThrow(()->new BankAccountNotFoundExeption("BankAccount not found"));        AccountOperation accountOperation = new AccountOperation();
         accountOperation.setType(OperationType.CREDIT);
         accountOperation.setAmount(amount);
         accountOperation.setDescription(description);
-        accountOperation.setOpeationDate(new Date());
+        accountOperation.setOpeationDate(nextDay);
         accountOperation.setBankAccount(bankAccount);
         accountOperationRepo.save(accountOperation);
         bankAccount.setBalance(bankAccount.getBalance()+amount);
@@ -132,8 +145,39 @@ return dtoMapper.fromCurrentBankAccount(currentAccount);}
 
     @Override
     public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundExeption, BalanceNoSufficientExeption {
-debit(accountIdSource,amount,"Transfer to  "+accountIdDestination);
+        Transfer transfer = new Transfer();
+        BankAccount bankAccountSource = bankAccountRepo.findById(accountIdSource).orElseThrow(()->new BankAccountNotFoundExeption("BankAccount not found"));
+        BankAccount bankAccountDestination = bankAccountRepo.findById(accountIdDestination).orElseThrow(()->new BankAccountNotFoundExeption("BankAccount not found"));
+        transfer.setAccountSource(bankAccountSource.getCustomer().getName());
+        transfer.setAccountDestination(bankAccountDestination.getCustomer().getName());
+        transfer.setAmount(amount);
+        transfer.setType(OperationType.valueOf("TRANSFER"));
+        transfer.setOldSoldeSource(bankAccountSource.getBalance());
+        transfer.setNewSoldeSource(bankAccountSource.getBalance()-amount);
+        transfer.setColor("N");
+        transfer.setOldSoldeDestination(bankAccountDestination.getBalance());
+        transfer.setNewSoldeDestination(bankAccountDestination.getBalance()+amount);
+        transferRepo.save(transfer);
+
+        debit(accountIdSource,amount,"Transfer to  "+accountIdDestination);
 credit(accountIdDestination,amount,"Transfer from " +accountIdSource);
+
+
+
+    }
+    @Override
+    public List<Transfer> getAllTransfer(){
+        return transferRepo.findAll();
+    }
+    @Override
+    public List<Transfer> getAllTransferByID(String accountID){
+        List<Transfer> transferList = new ArrayList<>();
+        List<Transfer> transferList1 = transferRepo.findAllByAccountDestination(accountID);
+        List<Transfer> transferList2 = transferRepo.findAllByAccountSource(accountID);
+        transferList.addAll(transferList1);
+        transferList.addAll(transferList2);
+        return transferList;
+
     }
     @Override
     public List<BankAccountDTO> bankAccountList(){
@@ -192,6 +236,13 @@ accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());
 
 
     }
+    @Override
+    public List<AccountOperationDTO> AllaccountHistory(){
+        List<AccountOperation> accountOperations =  accountOperationRepo.findAll();
+        return accountOperations.stream().map(op->dtoMapper.fromAccountOperation(op)).collect(Collectors.toList());
+
+
+    }
 
     @Override
     public List<CustomerDTO> searchCustomers(String s) {
@@ -199,5 +250,6 @@ accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());
         List<CustomerDTO> customerDTOS = customers.stream().map(cust -> dtoMapper.fromCustomer(cust)).collect(Collectors.toList());
         return customerDTOS;
     }
+
 
 }

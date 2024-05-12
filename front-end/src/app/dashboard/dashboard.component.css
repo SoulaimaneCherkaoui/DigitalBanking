@@ -1,0 +1,13 @@
+.chart-container {
+  width: 600px;
+  height:600px;
+ display: flex;
+  align-items: center;
+
+}
+
+.small-chart {
+  height: 400px; /* Adjust the height as needed */
+  margin-right: 10px; /* Add some margin between the canvas elements */
+
+}
